@@ -194,4 +194,25 @@ class FilterIconStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : FilterIconStepView) {
+        private val animator : Animator = Animator(view)
+        private val fis : FilterIconStep = FilterIconStep(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            fis.draw(canvas, paint)
+            animator.animate {
+                fis.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            fis.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
