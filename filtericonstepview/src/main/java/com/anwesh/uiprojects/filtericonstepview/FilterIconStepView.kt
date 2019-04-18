@@ -21,6 +21,7 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#FF6F00")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val rFactor : Float = 5.9f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -36,7 +37,7 @@ fun Canvas.drawFilterIconStep(i : Int, xGap : Float, size : Float, sc : Float, p
     translate(xGap * i, size/2 * i.sjf())
     drawLine(0f, 0f, 0f, y, paint)
     paint.style = Paint.Style.FILL
-    drawCircle(0f, y, xGap / 5, paint)
+    drawCircle(0f, y, xGap / rFactor, paint)
     restore()
 }
 
@@ -51,11 +52,12 @@ fun Canvas.drawFISNode(i : Int, scale : Float, paint : Paint) {
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     paint.style = Paint.Style.STROKE
-    val xGap : Float = (2 * size) / (lines - 1)
+    val xGap : Float = (size) / (lines - 1)
     save()
     translate(w / 2, gap * (i + 1))
     rotate(90f * sc2)
     drawArc(RectF(-size, -size, size, size), 0f, 360f * sc1, false, paint)
+    translate(-size / 2, 0f)
     for (j in 0..(lines - 1)) {
         drawFilterIconStep(j, xGap, size, sc1, paint)
     }
