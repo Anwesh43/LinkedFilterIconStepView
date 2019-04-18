@@ -28,3 +28,36 @@ fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
 fun Float.divideScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+fun Int.sjf() : Float = 1f - 2 * (this % 2).toFloat()
+
+fun Canvas.drawFilterIconStep(i : Int, xGap : Float, size : Float, sc : Float, paint : Paint) {
+    val y : Float = i.sjf() * (-size * sc.divideScale(i, lines))
+    save()
+    translate(xGap * i, size/2 * i.sjf())
+    drawLine(0f, 0f, 0f, y, paint)
+    paint.style = Paint.Style.FILL
+    drawCircle(0f, y, xGap / 5, paint)
+    restore()
+}
+
+fun Canvas.drawFISNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.style = Paint.Style.STROKE
+    val xGap : Float = (2 * size) / (lines - 1)
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(90f * sc2)
+    drawArc(RectF(-size, -size, size, size), 0f, 360f * sc1, false, paint)
+    for (j in 0..(lines - 1)) {
+        drawFilterIconStep(j, xGap, size, sc1, paint)
+    }
+    restore()
+}
