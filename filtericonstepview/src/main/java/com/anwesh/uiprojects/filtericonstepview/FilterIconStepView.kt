@@ -215,4 +215,13 @@ class FilterIconStepView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : FilterIconStepView {
+            val view : FilterIconStepView = FilterIconStepView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
